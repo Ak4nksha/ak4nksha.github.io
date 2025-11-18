@@ -1,0 +1,87 @@
+---
+layout: page
+title: "HW5 — Bigfoot Sighting Analysis"
+permalink: /hw5/
+---
+
+<h2>Bigfoot Sightings by State</h2>
+<p>
+  This visualization displays the top 20 U.S. states with the highest frequency of Bigfoot sightings. I chose a bar chart because it effectively compares a quantitative value (count of reports) across nominal categories (states).
+  To ensure the chart was readable, I performed data transformations in the specification: I standardized the state names to uppercase to merge inconsistencies, filtered out missing values, and used a window transform to rank the states by count, keeping only the top 20.
+</p>
+<div id="viz1"></div>
+<h2>Yearly Sighting Trends</h2>
+<p>
+  This second chart illustrates the change in Bigfoot report frequency over time. I used a line mark to show the temporal trend, with the year on the x-axis and the number of reports on the y-axis.
+  The interactivity I added is a dropdown menu that allows the user to filter the entire dataset by a specific state. This interactive element makes the visualization more useful by letting users isolate local trends (like a spike in Ohio) that might be hidden in the aggregate national data.
+</p>
+
+<div id="viz2"></div>
+<h3>Data & Analysis</h3>
+<p>
+  <a href="https://raw.githubusercontent.com/UIUC-iSchool-DataViz/is445_data/main/bfro_reports_fall2022.csv" class="btn" style="color:#eee; border:1px solid #888; background-color:#333; border-radius:6px; padding:8px 15px; text-decoration:none; margin-right:10px;">
+    The Data
+  </a>
+  <a href="/Applications/MSIM Assignments/Fall 2025/Data Viz/hw5/ak4nksha.github.io/python_notebooks/analysis.ipynb" class="btn" style="color:#eee; border:1px solid #888; background-color:#333; border-radius:6px; padding:8px 15px; text-decoration:none;">
+    The Analysis
+  </a>
+</p>
+
+<script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+<script>
+  const bfroUrl = 'https://raw.githubusercontent.com/UIUC-iSchool-DataViz/is445_data/main/bfro_reports_fall2022.csv';
+  const spec1 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Top 20 states by report count",
+    "width": 600,
+    "height": 400,
+    "data": { "url": bfroUrl, "format": { "type": "csv" } },
+    "transform": [
+      { "calculate": "datum['state'] ? upper(datum['state']) : (datum['State'] ? upper(datum['State']) : '')", "as": "STATE" },
+      { "filter": "isValid(datum.STATE) && datum.STATE !== ''" },
+      { "aggregate": [{ "op": "count", "as": "reports" }], "groupby": ["STATE"] },
+      { "window": [{ "op": "rank", "as": "r" }], "sort": [{ "field": "reports", "order": "descending" }] },
+      { "filter": "datum.r <= 20" }
+    ],
+    "mark": { "type": "bar", "tooltip": true },
+    "encoding": {
+      "x": { "field": "STATE", "type": "nominal", "sort": "-y", "title": "State" },
+      "y": { "field": "reports", "type": "quantitative", "title": "Number of Reports" },
+      "color": { "field": "STATE", "type": "nominal", "legend": null }
+    }
+  };
+
+  const spec2 = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Yearly trend with state filter",
+    "width": 600,
+    "height": 400,
+    "data": { "url": bfroUrl, "format": { "type": "csv" } },
+    "params": [{
+      "name": "stateSel",
+      "value": "ALL",
+      "bind": {
+        "input": "select",
+        "name": "Select State: ",
+        "options": ["ALL", "WASHINGTON", "CALIFORNIA", "FLORIDA", "OHIO", "ILLINOIS", "TEXAS", "MICHIGAN", "MISSOURI", "GEORGIA", "PENNSYLVANIA", "NEW YORK", "KENTUCKY"]
+      }
+    }],
+    "transform": [
+      { "calculate": "datum['state'] ? upper(datum['state']) : (datum['State'] ? upper(datum['State']) : '')", "as": "STATE" },
+      { "filter": "isValid(datum.STATE) && datum.STATE !== ''" },
+      { "filter": "stateSel == 'ALL' || datum.STATE == stateSel" }
+    ],
+    "mark": { "type": "line", "point": true, "tooltip": true },
+    "encoding": {
+      "x": { "field": "date", "type": "temporal", "timeUnit": "year", "title": "Year" },
+      "y": { "aggregate": "count", "type": "quantitative", "title": "Number of Reports" },
+      "color": { "value": "#ff7f00" }
+    }
+  };
+
+  vegaEmbed('#viz1', spec1, { "actions": false });
+  vegaEmbed('#viz2', spec2, { "actions": false });
+</script>
