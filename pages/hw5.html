@@ -6,14 +6,18 @@ permalink: /hw5/
 
 <h2>Bigfoot Sightings by State</h2>
 <p>
-  This visualization displays the top 20 U.S. states with the highest frequency of Bigfoot sightings. I chose a bar chart because it effectively compares a quantitative value (count of reports) across nominal categories (states).
-  To ensure the chart was readable, I performed data transformations in the specification: I standardized the state names to uppercase to merge inconsistencies, filtered out missing values, and used a window transform to rank the states by count, keeping only the top 20.
+  This visualization displays the top 20 U.S. states with the highest frequency of Bigfoot sightings. I chose a bar mark with STATE on the x (nominal) axis and the count of reports on the y (quantitative) axis.
+  The tooltips show the exact count. To ensure the chart was readable, I performed data transformations in the specification:
+  I standardized the state names to uppercase to merge inconsistencies, filtered out missing values, and used a window transform to rank the states by count, keeping only the top 20.
+  For my color choices, I used color simply to separate each STATE category. Since the categories are nominal and there are so many of them, the colors are just for visual separation and don't represent any quantitative value.
 </p>
 <div id="viz1"></div>
 <h2>Yearly Sighting Trends</h2>
 <p>
   This second chart illustrates the change in Bigfoot report frequency over time. I used a line mark to show the temporal trend, with the year on the x-axis and the number of reports on the y-axis.
-  The interactivity I added is a dropdown menu that allows the user to filter the entire dataset by a specific state. This interactive element makes the visualization more useful by letting users isolate local trends (like a spike in Ohio) that might be hidden in the aggregate national data.
+  I used a single color for the line because the main goal is just to show the trend over time.
+  The interactivity I added is a dropdown menu that allows the user to filter the entire dataset by a specific state. This interactive element makes the visualization more useful by letting users look closely at local trends (like a spike in Ohio) that might be hidden in the aggregate national data.
+  The state dropdown (Jekyll page) filters the data right in the browser, allowing readers to explore local patterns clearly.
 </p>
 
 <div id="viz2"></div>
