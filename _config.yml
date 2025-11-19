@@ -110,6 +110,8 @@ defaults:
     values:
       comments: false                                   # Set to true to enable disqus comments
 
+include:
+  - python_notebooks/analysis.ipynb
 
 ### Exclude from processing ###
 ## Add yours here if you have other stuff in your github.io page!!!**
